@@ -1,0 +1,3 @@
+import torch
+
+def verify_shape(x: torch.Tensor, shape: tuple[int, ...]) -> int: ...
