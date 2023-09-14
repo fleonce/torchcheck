@@ -9,7 +9,9 @@ setup(
     packages=["torch_check"],
     ext_modules=[
         CppExtension('torch_check', [
+            'torch_check/main.cpp',
             'torch_check/shape.cpp',
+            'torch_check/index.cpp',
         ]),
     ],
     cmdclass={
