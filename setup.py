@@ -6,6 +6,7 @@ setup(
     package_data={
         'torch_check': ['py.typed', '__init__.pyi']
     },
+    install_requires=['torch'],
     packages=["torch_check"],
     ext_modules=[
         CppExtension('torch_check', [
