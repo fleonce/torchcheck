@@ -15,3 +15,12 @@ assert_shape(x, (60, 30))
 
 The benefit of writing the code in c++ is that stacktraces in python then reference to the location where the function
 has been called, not where the actual shape verification has failed
+
+## Installation:
+
+Make sure to install torch first
+
+```shell
+pip install torch
+pip install git+https://github.com/fleonce/torchcheck.git
+```
