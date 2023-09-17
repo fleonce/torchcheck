@@ -24,11 +24,11 @@ set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS})
 
 add_library(
         lltm_ext MODULE
-        torch_check/shape.cpp
-        torch_check/index.cpp
-        torch_check/index.h
-        torch_check/main.cpp
-        torch_check/shape.h
+        torchcheck/asserts.cpp
+        torchcheck/index.cpp
+        torchcheck/index.h
+        torchcheck/main.cpp
+        torchcheck/asserts.h
 )
 python_extension_module(lltm_ext)
 target_link_libraries(lltm_ext ${TORCH_LIBRARIES})

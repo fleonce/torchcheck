@@ -2,17 +2,18 @@ from setuptools import setup
 from torch.utils.cpp_extension import BuildExtension, CppExtension
 
 setup(
-    name='torch_check',
+    name='torchcheck',
+    version='1.0.0',
+    author='fleonce',
     package_data={
-        'torch_check': ['py.typed', '__init__.pyi']
+        'torchcheck': ['py.typed', '__init__.pyi']
     },
-    install_requires=['torch'],
-    packages=["torch_check"],
+    packages=["torchcheck"],
     ext_modules=[
-        CppExtension('torch_check', [
-            'torch_check/main.cpp',
-            'torch_check/shape.cpp',
-            'torch_check/index.cpp',
+        CppExtension('torchcheck', [
+            'torchcheck/main.cpp',
+            'torchcheck/asserts.cpp',
+            'torchcheck/index.cpp',
         ]),
     ],
     cmdclass={
