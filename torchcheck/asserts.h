@@ -12,5 +12,9 @@ int64_t assert_dtype(
         const torch::Tensor &x,
         const torch::Dtype &dtype);
 
+int64_t assert_dim(
+        const torch::Tensor &x,
+        const int64_t &dim);
+
 
 #endif //TORCHCHECK_ASSERTS_H

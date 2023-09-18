@@ -17,3 +17,12 @@ int64_t assert_dtype(
             "Expected dtype of tensor to be: ", dtype, " but got: ", x.dtype());
     return 0;
 }
+
+int64_t assert_dim(
+        const torch::Tensor &x,
+        const int64_t &dim) {
+    TORCH_CHECK(
+            x.dim() == dim,
+            "Expected tensor dim to be: ", dim, "but got: ", x.dim())
+    return 0;
+}
