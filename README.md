@@ -4,7 +4,7 @@ A simple PyTorch library written in c++ to add assert statements for shapes:
 
 ```python
 import torch
-from torch_check import verify_shape as assert_shape
+from torchcheck import assert_shape
 
 x = torch.randn((30, 30))
 # will not fail
