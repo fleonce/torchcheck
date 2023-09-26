@@ -26,3 +26,20 @@ int64_t assert_dim(
             "Expected tensor dim to be: ", dim, "but got: ", x.dim())
     return 0;
 }
+
+int64_t assert_true(
+        const bool &x,
+        const char * msg) {
+    TORCH_CHECK(x, msg);
+    return 0;
+}
+
+int64_t assert_eq(
+        const torch::Tensor &x,
+        const torch::Tensor &y) {
+    assert_dim(y, x.dim());
+    assert_shape(y, x.sizes());
+    assert_dtype(y, x.scalar_type());
+    TORCH_CHECK(torch::equal(x, y), "Expected tensors x and y to match: ", x, y);
+    return 0;
+}

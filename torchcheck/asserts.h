@@ -16,5 +16,13 @@ int64_t assert_dim(
         const torch::Tensor &x,
         const int64_t &dim);
 
+int64_t assert_true(
+        const bool &x,
+        const char * msg);
+
+int64_t assert_eq(
+        const torch::Tensor &x,
+        const torch::Tensor &y);
+
 
 #endif //TORCHCHECK_ASSERTS_H
