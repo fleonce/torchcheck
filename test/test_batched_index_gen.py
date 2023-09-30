@@ -1,6 +1,6 @@
 import unittest
 import torch
-from torchcheck import batched_index_gen, assert_shape
+from torchcheck import batched_index_gen, assert_shape, assert_eq
 
 
 def _batched_index_gen(mask: torch.Tensor, invalid_index=-1) -> torch.Tensor:
@@ -31,8 +31,7 @@ class BatchedTestCase(unittest.TestCase):
             gold_mask = _batched_index_gen(rand_bool, -1)
             cpp_mask = batched_index_gen(rand_bool)
 
-            assert_shape(cpp_mask, gold_mask.shape)
-            assert torch.all(torch.eq(gold_mask, cpp_mask)), (gold_mask, cpp_mask, rand_bool)
+            assert_eq(cpp_mask, gold_mask)
 
 
 if __name__ == "__main__":
