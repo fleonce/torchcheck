@@ -1,6 +1,12 @@
 import unittest
 import torch
-from torchcheck import *
+from torchcheck import (
+    assert_dtype,
+    assert_eq,
+    assert_dim,
+    assert_shape,
+    assert_true,
+)
 
 
 class AssertTestCase(unittest.TestCase):
@@ -21,3 +27,12 @@ class AssertTestCase(unittest.TestCase):
         self.assertRaises(RuntimeError, lambda: assert_eq(x, y))
         self.assertEqual(0, assert_eq(x, x))
         self.assertEqual(0, assert_eq(y, y))
+
+    def test_assert_true(self):
+        self.assertEqual(0, assert_true(True, ""))
+        self.assertRaises(RuntimeError, lambda: assert_true(False, ""))
+
+    def test_assert_dtype(self):
+        x = torch.randn((64,), dtype=torch.float32)
+        self.assertEqual(0, assert_dtype(x, torch.float32))
+        self.assertRaises(RuntimeError, lambda: assert_dtype(x, torch.bool))

@@ -2,6 +2,7 @@
 #include <vector>
 #include "index.h"
 #include "asserts.h"
+#include "pybind/torch_dtype.h"
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
     m.def("assert_shape", &assert_shape, "Verify shapes");

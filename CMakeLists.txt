@@ -3,7 +3,7 @@ set(CMAKE_CUDA_ARCHITECTURES "native")
 set(CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/venv/lib/python3.10/site-packages/torch/share/cmake/Torch")
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/venv/lib/python3.10/site-packages/skbuild/resources/cmake")
 set(CMAKE_CUDA_COMPILER /usr/local/cuda/bin/nvcc)
-project(LLTM LANGUAGES C CXX CUDA VERSION 12.1)
+project(TorchCheck LANGUAGES C CXX CUDA VERSION 12.1)
 # if CUDA is optional: enable_language(CUDA)
 
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/venv")
@@ -23,16 +23,17 @@ find_package(Torch REQUIRED)
 set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS})
 
 add_library(
-        lltm_ext MODULE
+        torchcheck_ext MODULE
         torchcheck/asserts.cpp
         torchcheck/index.cpp
         torchcheck/index.h
         torchcheck/main.cpp
         torchcheck/asserts.h
+        torchcheck/pybind/torch_dtype.h
 )
-python_extension_module(lltm_ext)
-target_link_libraries(lltm_ext ${TORCH_LIBRARIES})
-target_include_directories(lltm_ext PRIVATE ${TORCH_INCLUDE_DIRS})
-set_property(TARGET lltm_ext PROPERTY CXX_STANDARD 17)
+python_extension_module(torchcheck_ext)
+target_link_libraries(torchcheck_ext ${TORCH_LIBRARIES})
+target_include_directories(torchcheck_ext PRIVATE ${TORCH_INCLUDE_DIRS})
+set_property(TARGET torchcheck_ext PROPERTY CXX_STANDARD 17)
 
-install(TARGETS lltm_ext DESTINATION lltm)
+install(TARGETS torchcheck_ext DESTINATION torchcheck)
