@@ -3,6 +3,7 @@
 #include "index.h"
 #include "asserts.h"
 #include "pybind/torch_dtype.h"
+#include "attention/attention_t5.h"
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
     m.def("assert_shape", &assert_shape, "Verify shapes");
@@ -11,4 +12,5 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
     m.def("assert_true", &assert_true, "Verify condition");
     m.def("assert_eq", &assert_eq, "Verify shapes, dtype, dim and values");
     m.def("batched_index_gen", &batched_index_gen, "Get a tensor of indices from a boolean mask");
+    m.def("t5_self_attention", &t5_self_attention, "T5 self attention");
 }

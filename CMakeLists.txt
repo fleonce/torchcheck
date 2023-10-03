@@ -24,12 +24,13 @@ set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS})
 
 add_library(
         torchcheck_ext MODULE
-        torchcheck/asserts.cpp
-        torchcheck/index.cpp
-        torchcheck/index.h
-        torchcheck/main.cpp
-        torchcheck/asserts.h
-        torchcheck/pybind/torch_dtype.h
+        torchcheck/csrc/asserts.cpp
+        torchcheck/csrc/index.cpp
+        torchcheck/csrc/index.h
+        torchcheck/csrc/main.cpp
+        torchcheck/csrc/asserts.h
+        torchcheck/csrc/pybind/torch_dtype.h
+        torchcheck/csrc/attention/attention_t5.h
 )
 python_extension_module(torchcheck_ext)
 target_link_libraries(torchcheck_ext ${TORCH_LIBRARIES})

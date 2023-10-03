@@ -3,17 +3,17 @@ from torch.utils.cpp_extension import BuildExtension, CppExtension
 
 setup(
     name='torchcheck',
-    version='1.0.1',
+    version='1.0.2',
     author='fleonce',
     package_data={
         'torchcheck': ['py.typed', '__init__.pyi']
     },
     packages=["torchcheck"],
     ext_modules=[
-        CppExtension('torchcheck', [
-            'torchcheck/main.cpp',
-            'torchcheck/asserts.cpp',
-            'torchcheck/index.cpp',
+        CppExtension('torchcheck.C', [
+            'torchcheck/csrc/main.cpp',
+            'torchcheck/csrc/asserts.cpp',
+            'torchcheck/csrc/index.cpp',
         ]),
     ],
     cmdclass={
