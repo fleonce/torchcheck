@@ -6,7 +6,7 @@ setup(
     version='1.0.2',
     author='fleonce',
     package_data={
-        'torchcheck': ['py.typed', '__init__.pyi']
+        'torchcheck': ['py.typed', 'C/__init__.pyi']
     },
     packages=["torchcheck"],
     ext_modules=[

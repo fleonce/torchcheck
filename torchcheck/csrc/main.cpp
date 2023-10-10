@@ -4,6 +4,7 @@
 #include "asserts.h"
 #include "pybind/torch_dtype.h"
 #include "attention/attention_t5.h"
+#include <pybind11/pybind11.h>
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
     m.def("assert_shape", &assert_shape, "Verify shapes");
