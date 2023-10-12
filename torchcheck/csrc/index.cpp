@@ -1,11 +1,13 @@
 #include "index.h"
 
 torch::Tensor batched_index_gen(
-        const torch::Tensor &mask) {
+        const torch::Tensor &mask, const c10::optional<int64_t> & min_size) {
     TORCH_CHECK(mask.dtype() == at::kBool, "Expected a boolean mask but got ", mask.dtype());
     TORCH_CHECK(mask.dim() == 2, "Expected a 2D tensor, but got a ", mask.dim(), "D tensor!");
+    TORCH_CHECK(min_size.value_or(0) >= 0, "Expected min_size >= 0, but got ", min_size.value_or(0));
+    TORCH_CHECK(min_size.value_or(0) <= mask.size(-1), "Expected min_size <= ", mask.size(-1), " but got ", min_size.value_or(0));
     auto max_indices = mask.to(at::kLong).sum({-1}).max();
-    max_indices.clamp_min(at::Scalar(0));
+    max_indices.clamp_min_(torch::Scalar(min_size.value_or(0)));
 
     auto sizes = mask.sizes();
     auto bs = sizes[0];
