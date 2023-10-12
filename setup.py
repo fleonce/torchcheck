@@ -3,7 +3,7 @@ from torch.utils.cpp_extension import BuildExtension, CppExtension
 
 setup(
     name='torchcheck',
-    version='1.0.2',
+    version='1.0.3',
     author='fleonce',
     package_data={
         'torchcheck': ['py.typed', 'C/__init__.pyi']
