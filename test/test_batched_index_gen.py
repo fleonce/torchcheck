@@ -33,6 +33,11 @@ class BatchedTestCase(unittest.TestCase):
 
             assert_eq(cpp_mask, gold_mask)
 
+    @staticmethod
+    def test_min_size():
+        inp = torch.zeros((1, 10), dtype=torch.bool)
+        assert_eq(batched_index_gen(inp, min_size=1), torch.full((1, 1), -1, dtype=torch.long))
+
 
 if __name__ == "__main__":
     unittest.main()
