@@ -17,7 +17,6 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
             py::arg("x"),
             py::arg("mask"),
             py::kw_only(),
-            py::arg("fill_value") = py::none(),
             py::arg("min_size") = py::none(),
             "Get a tuple of values and a mask from an input and a mask");
     m.def("t5_self_attention", &t5_self_attention, "T5 self attention");
