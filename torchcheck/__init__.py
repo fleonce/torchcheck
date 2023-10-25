@@ -8,6 +8,7 @@ from torchcheck.C import (
     assert_true,
     assert_dtype,
     batched_index_gen,
+    batched_masked_select,
 )
 
 from .attention import T5MultiHeadAttention
