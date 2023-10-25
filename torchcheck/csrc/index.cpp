@@ -34,8 +34,15 @@ std::tuple<torch::Tensor, torch::Tensor> batched_masked_select(
     auto max_indices = mask.to(at::kLong).sum({-1}).max();
     max_indices.clamp_min_(torch::Scalar(min_size.value_or(0)));
 
-    auto [top_k_mask, top_k_indices] = mask.to(at::kLong).topk(max_indices.item().toLong(), -1, true, true);
-    auto mask_out = top_k_mask.to(torch::kBool);
+    auto sizes = mask.sizes();
+    auto bs = sizes[0];
+    auto seq_len = sizes[1];
+    auto indices = torch::arange(seq_len, at::TensorOptions().device(mask.device())).
+            expand({bs, -1}).clone();
+    indices.masked_fill_(~mask, seq_len);
+
+    auto [ignored, top_k_indices] = indices.topk(max_indices.item().toLong(), -1, false);
+    auto mask_out = torch::gather(mask, -1, top_k_indices);
     auto values = torch::gather(x, -1, top_k_indices);
     return std::make_tuple(values, mask_out);
 }
