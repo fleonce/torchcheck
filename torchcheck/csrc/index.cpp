@@ -20,3 +20,25 @@ torch::Tensor batched_index_gen(
     TORCH_CHECK(top_k.dim() == 2, "Expected output dim = 2, but got ", top_k.dim());
     return top_k;
 }
+
+
+std::tuple<torch::Tensor, torch::Tensor> batched_masked_select(
+        const torch::Tensor &x,
+        const torch::Tensor &mask,
+        const c10::optional<torch::Scalar> & fill_value,
+        const c10::optional<int64_t> & min_size) {
+    TORCH_CHECK(x.dim() == 2, "Expected dim of self to be 2 but got ", x.dim());
+    TORCH_CHECK(mask.dim() == x.dim(), "Expected dim of mask to match self.dim(), but got ", mask.dim(), " vs. ", x.dim());
+    TORCH_CHECK(min_size.value_or(0) >= 0, "Expected min_size >= 0, but got ", min_size.value_or(0));
+    TORCH_CHECK(min_size.value_or(0) <= mask.size(-1), "Expected min_size <= ", mask.size(-1), " but got ", min_size.value_or(0));
+
+    auto max_indices = mask.to(at::kLong).sum({-1}).max();
+    max_indices.clamp_min_(torch::Scalar(min_size.value_or(0)));
+
+    auto [top_k_mask, top_k_indices] = mask.topk(max_indices.item().toLong(), -1, true, true);
+    auto values = torch::gather(x, -1, top_k_indices);
+    if (fill_value.has_value()) {
+        values.masked_fill_(top_k_mask, fill_value.value());
+    }
+    return std::make_tuple(values, top_k_mask);
+}
