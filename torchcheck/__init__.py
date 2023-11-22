@@ -18,7 +18,7 @@ from .attention import T5MultiHeadAttention
 
 
 def assert_shape(x: Tensor, shape: tuple[Union[int, SymInt], ...]) -> int:
-    if config.use_python_equivalents and False:
+    if config.use_python_equivalents:
         return impl.assert_shape(x, shape)
     return C.assert_shape(x, shape)
 
