@@ -9,9 +9,8 @@ torch::Tensor batched_index_gen(
     auto max_indices = mask.to(at::kLong).sum({-1}).max();
     max_indices.clamp_min_(torch::Scalar(min_size.value_or(0)));
 
-    auto sizes = mask.sizes();
-    auto bs = sizes[0];
-    auto seq_len = sizes[1];
+    auto bs = mask.size(0);
+    auto seq_len = mask.size(1);
     auto indices = torch::arange(seq_len, at::TensorOptions().device(mask.device())).
             expand({bs, -1}).clone();
     indices.masked_fill_(~mask, seq_len);
