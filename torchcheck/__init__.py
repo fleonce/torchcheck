@@ -1,10 +1,10 @@
 import torch  # noqa F401
-from torch import Tensor
-from typing import Optional
+from torch import Tensor, SymInt
+from torch._subclasses import FakeTensor
+from typing import Optional, Union
 import torchcheck.C
 
 from torchcheck.C import (
-    assert_shape,
     assert_dim,
     assert_eq,
     assert_true,
@@ -15,6 +15,12 @@ import torchcheck.impl as impl
 import torchcheck.C as C
 
 from .attention import T5MultiHeadAttention
+
+
+def assert_shape(x: Tensor, shape: tuple[Union[int, SymInt], ...]) -> int:
+    if config.use_python_equivalents and False:
+        return impl.assert_shape(x, shape)
+    return C.assert_shape(x, shape)
 
 
 def batched_index_gen(x: Tensor, *, min_size: Optional[int] = None) -> Tensor:

@@ -6,7 +6,7 @@
 
 int64_t assert_shape(
         const torch::Tensor &x,
-        const at::IntArrayRef &shape);
+        const at::SymIntArrayRef &shape);
 
 int64_t assert_dtype(
         const torch::Tensor &x,

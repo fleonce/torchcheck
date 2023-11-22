@@ -7,7 +7,10 @@
 #include <pybind11/pybind11.h>
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
-    m.def("assert_shape", &assert_shape, "Verify shapes");
+    m.def("assert_shape", &assert_shape,
+            py::arg("x"),
+            py::arg("shape"),
+            "Verify shapes");
     m.def("assert_dtype", &assert_dtype, "Verify dtype");
     m.def("assert_dim", &assert_dim, "Verify dim");
     m.def("assert_true", &assert_true, "Verify condition");
