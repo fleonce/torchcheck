@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from torch.utils.cpp_extension import BuildExtension, CppExtension
 
 setup(
@@ -8,7 +8,7 @@ setup(
     package_data={
         'torchcheck': ['py.typed', 'C/__init__.pyi']
     },
-    packages=["torchcheck"],
+    packages=find_packages(),
     ext_modules=[
         CppExtension('torchcheck.C', [
             'torchcheck/csrc/main.cpp',
