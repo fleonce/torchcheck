@@ -1,5 +1,3 @@
-import functools
-
 import torch  # noqa F401
 from torch import Tensor
 from typing import Optional
@@ -14,6 +12,7 @@ from torchcheck.C import (
 )
 import torchcheck.config as config
 import torchcheck.impl as impl
+import torchcheck.C as C
 
 from .attention import T5MultiHeadAttention
 
