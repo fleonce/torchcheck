@@ -1,0 +1,13 @@
+[build-system]
+requires = [
+    "setuptools",
+    "torch>=2.1.0"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "torchcheck"  # as it would appear on PyPI
+version = "1.0.5"
+dependencies = [
+    "torch>=2.1.0"
+]
