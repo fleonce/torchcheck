@@ -5,7 +5,7 @@ bool does_symint_match_symint(const at::SymInt &s1, const at::SymInt &s2) {
     auto opt_int1 = s1.maybe_as_int();
     auto opt_int2 = s2.maybe_as_int();
     if (opt_int1.has_value() && opt_int2.has_value()) {
-        return opt_int1.value() == opt_int2.value();
+        return C10_LIKELY(opt_int1.value() == opt_int2.value());
     }
     if (opt_int1.has_value() or opt_int2.has_value()) {
         return false;
@@ -58,7 +58,7 @@ int64_t assert_eq(
         const torch::Tensor &x,
         const torch::Tensor &y) {
     assert_dim(y, x.dim());
-    // assert_shape(y, x.sizes());
+    assert_shape(y, x.sizes());
     assert_dtype(y, x.scalar_type());
     TORCH_CHECK(torch::equal(x, y), "Expected tensors x and y to match: ", x, y);
     return 0;
