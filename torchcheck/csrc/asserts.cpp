@@ -58,7 +58,7 @@ int64_t assert_eq(
         const torch::Tensor &x,
         const torch::Tensor &y) {
     assert_dim(y, x.dim());
-    assert_shape(y, x.sizes());
+    assert_shape(y, x.sym_sizes());
     assert_dtype(y, x.scalar_type());
     TORCH_CHECK(torch::equal(x, y), "Expected tensors x and y to match: ", x, y);
     return 0;
