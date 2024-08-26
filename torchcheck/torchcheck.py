@@ -10,6 +10,7 @@ def batched_index_padded(
     self: torch.Tensor,
     pad_value: int = -1,
     *,
+    sorted: bool = False,
     out: torch.Tensor = None,
     min_size: Optional[torch.Tensor | int] = None,
     verify_outputs: Optional[bool] = None,
@@ -40,6 +41,8 @@ def batched_index_padded(
     value_out = torch.empty_like(out, dtype=self.dtype)
 
     torch.topk(self, k=out.shape[-1], dim=-1, out=(value_out, out))
+    if sorted:
+        out = torch.sort(out, dim=-1)
 
     # convert back to bool
     value_mask = value_out.to(torch.bool)
@@ -105,11 +108,3 @@ def batched_masked_select(
 
 
 batched_index_gen = batched_index_padded
-
-batched_index_gen(torch.randint(2, (3, 4), dtype=torch.bool), min_size=4)
-
-
-batched_masked_select(
-    torch.randn((32, 32, 32),),
-    torch.randint(2, (32, 32), dtype=torch.bool),
-)
