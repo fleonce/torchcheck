@@ -3,7 +3,7 @@ from typing import Optional
 
 import torch
 
-from torchcheck.return_types import batched_masked_select_t
+from torchcheck.return_types import batched_masked_select_t, batched_index_padded_t
 
 
 def batched_index_padded(
@@ -13,8 +13,9 @@ def batched_index_padded(
     sorted: bool = False,
     out: torch.Tensor = None,
     min_size: Optional[torch.Tensor | int] = None,
+    return_mask: Optional[bool] = None,
     verify_outputs: Optional[bool] = None,
-):
+) -> torch.Tensor | batched_index_padded_t:
     """
     Generate a new ``torch.Tensor`` based on self, a mask. Returns a shorter Tensor with indices where self == True.
 
@@ -45,6 +46,9 @@ def batched_index_padded(
     # convert back to bool
     value_mask = value_out.to(torch.bool)
     out.masked_fill_(~value_mask, pad_value)
+
+    if return_mask:
+        return batched_index_padded_t(out, value_mask)
     return out
 
 
