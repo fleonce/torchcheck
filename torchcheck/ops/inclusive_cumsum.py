@@ -19,7 +19,6 @@ def inclusive_cumsum(self: Tensor, dim: int, *, full: bool = False):
 
     view = (...,) * dim + (slice(1, None, None),)
     torch.cumsum(self, dim=dim, out=cumsum_out[view])
-    print(cumsum_out)
 
     if not full:
         out_view = (...,) * dim + (slice(None, -1, None),)
