@@ -1,3 +1,4 @@
+import torchcheck.ops as ops
 from .checks import (
     assert_dim,
     assert_dtype,
@@ -13,5 +14,6 @@ from .torchcheck import (
 
 __all__ = [
     "assert_dim", "assert_dtype", "assert_eq", "assert_true", "assert_shape",
-    "batched_index_gen", "batched_index_padded", "batched_masked_select"
+    "batched_index_gen", "batched_index_padded", "batched_masked_select",
+    "ops"
 ]

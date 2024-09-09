@@ -1,8 +1,34 @@
 import warnings
-from typing import Optional
+from typing import Optional, overload
 
 import torch
 import torchcheck.return_types
+
+
+@overload
+def batched_index_padded(
+    self: torch.Tensor,
+    pad_value: int = -1,
+    *,
+    sorted: bool = False,
+    out: torch.Tensor = None,
+    min_size: Optional[torch.Tensor | int] = None,
+    return_mask: Optional[bool] = True,
+    verify_outputs: Optional[bool] = None,
+) -> torchcheck.return_types.batched_index_padded: ...
+
+
+@overload
+def batched_index_padded(
+    self: torch.Tensor,
+    pad_value: int = -1,
+    *,
+    sorted: bool = False,
+    out: torch.Tensor = None,
+    min_size: Optional[torch.Tensor | int] = None,
+    return_mask: Optional[bool] = False,
+    verify_outputs: Optional[bool] = None,
+) -> torch.Tensor: ...
 
 
 def batched_index_padded(
