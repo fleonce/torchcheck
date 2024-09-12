@@ -1,4 +1,4 @@
-from typing import overload, reveal_type, Sequence, Union, NamedTuple
+from typing import overload
 
 import torch
 from torch import Tensor, SymInt
@@ -28,12 +28,19 @@ def expand_dim(tensor: Tensor, dim: int, expand_size: int) -> Tensor:
 @overload
 def expand_dims(self: Tensor, *dims_and_sizes: dim_with_size) -> Tensor: ...
 
+
 @overload
 def expand_dims(self: Tensor, dims_and_sizes: list[dim_with_size]) -> Tensor: ...
+
+
 @overload
 def expand_dims(self: Tensor, dims_and_sizes: tuple[dim_with_size, ...]) -> Tensor: ...
 
-def expand_dims(self: Tensor, dims_and_sizes: None | dim_with_size | list[dim_with_size] | tuple[dim_with_size, ...] = None, *other_dims: dim_with_size) -> Tensor:
+
+def expand_dims(
+    self: Tensor, dims_and_sizes: None | dim_with_size | list[dim_with_size] | tuple[dim_with_size, ...] = None,
+    *other_dims: dim_with_size
+    ) -> Tensor:
     if (
         dims_and_sizes is None
         or (isinstance(dims_and_sizes[0], list) and len(dims_and_sizes[0]) == 0)
