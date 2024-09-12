@@ -1,5 +1,5 @@
 import warnings
-from typing import Optional, overload
+from typing import Optional, overload, Literal
 
 import torch
 import torchcheck.return_types
@@ -11,9 +11,9 @@ def batched_index_padded(
     pad_value: int = -1,
     *,
     sorted: bool = False,
-    out: torch.Tensor = None,
+    out: Optional[torch.Tensor] = None,
     min_size: Optional[torch.Tensor | int] = None,
-    return_mask: Optional[bool] = True,
+    return_mask: Literal[True],
     verify_outputs: Optional[bool] = None,
 ) -> torchcheck.return_types.batched_index_padded: ...
 
@@ -24,9 +24,9 @@ def batched_index_padded(
     pad_value: int = -1,
     *,
     sorted: bool = False,
-    out: torch.Tensor = None,
+    out: Optional[torch.Tensor] = None,
     min_size: Optional[torch.Tensor | int] = None,
-    return_mask: Optional[bool] = False,
+    return_mask: Literal[False] | None = ...,
     verify_outputs: Optional[bool] = None,
 ) -> torch.Tensor: ...
 
@@ -36,7 +36,7 @@ def batched_index_padded(
     pad_value: int = -1,
     *,
     sorted: bool = False,
-    out: torch.Tensor = None,
+    out: Optional[torch.Tensor] = None,
     min_size: Optional[torch.Tensor | int] = None,
     return_mask: Optional[bool] = None,
     verify_outputs: Optional[bool] = None,
@@ -55,7 +55,7 @@ def batched_index_padded(
         )
 
     if out is None:
-        dim_size = self.sum(dim=-1).amax()
+        dim_size = int(self.sum(dim=-1).amax())
         dims = self.shape[:-1] + (dim_size,)
         out = self.new_zeros(dims, dtype=torch.long)
         pass
@@ -116,7 +116,7 @@ def batched_masked_select(
         )
 
     if out is None:
-        dim_size = mask.sum(dim=-1).amax()
+        dim_size = int(mask.sum(dim=-1).amax())
         out = self.new_empty(self.shape[:mask.dim()] + (dim_size,))
 
     mask = mask.to(torch.int8)
