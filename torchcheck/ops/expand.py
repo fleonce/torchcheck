@@ -52,13 +52,10 @@ def expand_dims(self: Tensor, dims_and_sizes: None | dim_with_size | list[dim_wi
         and isinstance(dims_and_sizes[0], int)
         and isinstance(dims_and_sizes[1], int)
     ):
-        reveal_type(dims_and_sizes)
         dims_and_sizes = [(dims_and_sizes[0], dims_and_sizes[1])] + list(other_dims)
-        reveal_type(dims_and_sizes)
     if not isinstance(dims_and_sizes, list):
         assert False
     expands = [-1] * self.dim()
-    reveal_type(dims_and_sizes)
     for dim, size in dims_and_sizes:
         wrap_dim = maybe_wrap_dim(self, dim)
         expands[wrap_dim] = size
