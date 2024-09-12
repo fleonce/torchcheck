@@ -47,6 +47,11 @@ def batched_index_padded(
     """
     if self.dtype != torch.bool:
         raise ValueError(repr(self.dtype) + " not supported for `batched_index_gen`")
+    if (
+        out is not None
+        and out.device != self.device
+    ):
+        raise ValueError(f"Expected out and self to be on the same device, but got {out.device} and {self.device}")
 
     if min_size is not None:
         warnings.warn(
