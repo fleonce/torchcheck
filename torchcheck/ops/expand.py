@@ -60,8 +60,12 @@ def expand_dims(
         and isinstance(dims_and_sizes[1], int)
     ):
         dims_and_sizes = [(dims_and_sizes[0], dims_and_sizes[1])] + list(other_dims)
+    if isinstance(dims_and_sizes, tuple):
+        assert not isinstance(dims_and_sizes[0], int)
+        assert len(dims_and_sizes) == 1 or not isinstance(dims_and_sizes[1], int)
+        dims_and_sizes = list(dims_and_sizes)
     if not isinstance(dims_and_sizes, list):
-        assert False
+        assert False, dims_and_sizes
     expands = [-1] * self.dim()
     for dim, size in dims_and_sizes:
         wrap_dim = maybe_wrap_dim(self, dim)
