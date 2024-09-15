@@ -17,10 +17,11 @@ def inclusive_cumsum(self: Tensor, dim: int, *, full: bool = False):
     inclusive_shape = replace_in_shape(self_shape, dim=dim, size=self_shape[dim] + 1)
     cumsum_out = self.new_zeros(inclusive_shape)
 
-    view = (...,) * dim + (slice(1, None, None),)
+    empty_slice = slice(None, None, None)
+    view = (empty_slice,) * dim + (slice(1, None, None),)
     torch.cumsum(self, dim=dim, out=cumsum_out[view])
 
     if not full:
-        out_view = (...,) * dim + (slice(None, -1, None),)
+        out_view = (empty_slice,) * dim + (slice(None, -1, None),)
         return cumsum_out[out_view].contiguous()
     return cumsum_out
