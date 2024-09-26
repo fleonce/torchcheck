@@ -44,6 +44,11 @@ def batched_index_padded(
     """
     if self.dtype != torch.bool:
         raise ValueError(repr(self.dtype) + " not supported for `batched_index_gen`")
+    if (
+        out is not None
+        and out.device != self.device
+    ):
+        raise ValueError(f"Expected out and self to be on the same device, but got {out.device} and {self.device}")
 
     if min_size is not None:
         warnings.warn(
@@ -52,7 +57,7 @@ def batched_index_padded(
         )
 
     if out is None:
-        dim_size = self.sum(dim=-1).amax()
+        dim_size = int(self.sum(dim=-1).amax())
         dims = self.shape[:-1] + (dim_size,)
         out = self.new_zeros(dims, dtype=torch.long)
         pass
@@ -113,7 +118,7 @@ def batched_masked_select(
         )
 
     if out is None:
-        dim_size = mask.sum(dim=-1).amax()
+        dim_size = int(mask.sum(dim=-1).amax())
         out = self.new_empty(self.shape[:mask.dim()] + (dim_size,))
 
     mask = mask.to(torch.int8)
