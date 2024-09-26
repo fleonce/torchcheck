@@ -63,10 +63,15 @@ def batched_index_padded(
     self = self.to(torch.int8)
     value_out = torch.empty_like(out, dtype=self.dtype)
 
-    torch.topk(self, k=out.shape[-1], dim=-1, out=(value_out, out), sorted=sorted)
+    torch.topk(self, k=out.shape[-1], dim=-1, out=(value_out, out), sorted=False)
 
     # convert back to bool
     value_mask = value_out.to(torch.bool)
+    if sorted:
+        out.masked_fill_(~value_mask, self.size(-1))
+
+        out, indices = torch.sort(out)
+        value_mask = torch.gather(value_mask, dim=-1, index=indices)
     out.masked_fill_(~value_mask, pad_value)
 
     if return_mask:
