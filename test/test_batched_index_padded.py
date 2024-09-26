@@ -3,11 +3,18 @@ import unittest
 import torch
 from torch._dynamo.exc import Unsupported
 
-from tools.test import BasicTestCase, foreach
+from tools.test import BasicTestCase, foreach, TORCH_DEVICE_LIST
 from torchcheck import batched_index_padded, assert_eq
 
 
 class BatchedIndexPaddedTestCase(BasicTestCase):
+
+    @foreach(device=TORCH_DEVICE_LIST)
+    def test_batched_index_order(self, device: str):
+        mask = torch.randint(2, (10, 10), dtype=torch.bool, device=device)
+        out = batched_index_padded(mask, 10)
+        sort = torch.sort(out)[0]
+        self.assertTensorEqual(out, sort)
 
     @foreach(dtype={torch.int, torch.long, torch.uint8, torch.uint32, torch.float16, torch.bfloat16, torch.float32, torch.float64})
     def test_batched_index_padded_wrong_dtype(self, dtype: torch.dtype):

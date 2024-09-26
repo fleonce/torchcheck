@@ -1,5 +1,5 @@
 import warnings
-from typing import Optional, overload
+from typing import Optional, overload, Literal
 
 import torch
 import torchcheck.return_types
@@ -10,11 +10,10 @@ def batched_index_padded(
     self: torch.Tensor,
     pad_value: int = -1,
     *,
-    sorted: bool = False,
-    out: torch.Tensor = None,
+    sorted: bool = True,
+    out: Optional[torch.Tensor] = None,
     min_size: Optional[torch.Tensor | int] = None,
-    return_mask: Optional[bool] = True,
-    verify_outputs: Optional[bool] = None,
+    return_mask: Literal[True],
 ) -> torchcheck.return_types.batched_index_padded: ...
 
 
@@ -23,11 +22,10 @@ def batched_index_padded(
     self: torch.Tensor,
     pad_value: int = -1,
     *,
-    sorted: bool = False,
-    out: torch.Tensor = None,
+    sorted: bool = True,
+    out: Optional[torch.Tensor] = None,
     min_size: Optional[torch.Tensor | int] = None,
-    return_mask: Optional[bool] = False,
-    verify_outputs: Optional[bool] = None,
+    return_mask: Literal[False] | None = ...,
 ) -> torch.Tensor: ...
 
 
@@ -35,11 +33,10 @@ def batched_index_padded(
     self: torch.Tensor,
     pad_value: int = -1,
     *,
-    sorted: bool = False,
-    out: torch.Tensor = None,
+    sorted: bool = True,
+    out: Optional[torch.Tensor] = None,
     min_size: Optional[torch.Tensor | int] = None,
     return_mask: Optional[bool] = None,
-    verify_outputs: Optional[bool] = None,
 ) -> torch.Tensor | torchcheck.return_types.batched_index_padded:
     """
     Generate a new ``torch.Tensor`` based on self, a mask. Returns a shorter Tensor with indices where self == True.

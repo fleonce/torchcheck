@@ -7,6 +7,13 @@ import torch
 from torch import Tensor
 
 
+TORCH_DEVICE_LIST = ["cpu"]
+if torch.cuda.is_available():
+    TORCH_DEVICE_LIST += ["cuda"]
+if torch.backends.mps.is_available():
+    TORCH_DEVICE_LIST += ["mps"]
+
+
 def foreach(**setup: list[Any] | set[Any]):
     def inner(func):
         @wraps(func)
