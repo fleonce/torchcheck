@@ -1,8 +1,56 @@
-from typing import overload
+from typing import overload, Iterable
+from functools import lru_cache
 
 from torch import Tensor
 from torchcheck.ops.expand import expand_dims
+import torch
 
+
+@lru_cache(255)
+def _operand_to_sizes(shape: tuple[int, ...], operand: str) -> tuple[int, ...]:
+    inp, outp = operand.split("->")
+
+    if len(inp) != len(shape):
+        raise ValueError("")
+    if "".join(outp.split(",")) != inp:
+        raise ValueError(
+            f"The order of dimensions must be the same for input and output, "
+            f"got {inp} vs {''.join(outp.split(','))}"
+        )
+    sizes: tuple[int, ...] = tuple()
+    for i, elem in enumerate(outp):
+        size = 1
+        if elem in inp:
+            size = shape[inp.index(elem)]
+
+        sizes = sizes + (size,)
+    return sizes
+
+def unsqueeze(self: Tensor, operand: str) -> Tensor:
+    """
+    Unsqueeze a tensor using a string description of the desired shape:
+
+    >>> t = unsqueeze(t, "abc->a,bc")
+    will return a 4 dimensional tensor of shape `(a,1,b,c)`
+
+    Format: [a-zA-Z]+->[,a-zA-Z]+
+    """
+    orig_sizes = (self.size(dim) for dim in range(self.dim()))
+    sizes = _operand_to_sizes(orig_sizes, operand)
+    return self.view(sizes)
+
+def unsqueeze_expand(self: Tensor, operand: str, *dims_and_sizes: tuple[int, int]):
+    """
+    Unsqueeze a tensor using a string description of the desired shape
+    and expand it along the new shape.
+
+    >>> t = unsqueeze_expand(t, "abc->a,bc", (1, 4))
+    will return a 4 dimensional tensor of shape `(a,4,b,c)`
+
+    For format, look at `unsqueeze`
+    """
+    self = unsqueeze(self, operand)
+    return expand_dims(self, dims_and_sizes)
 
 @overload
 def unsqueeze_dims(self: Tensor, dims: tuple[int, ...]) -> Tensor: ...

@@ -1,4 +1,4 @@
-from typing import overload
+from typing import overload, Sequence, cast
 
 import torch
 from torch import Tensor, SymInt
@@ -36,36 +36,58 @@ def expand_dims(self: Tensor, dims_and_sizes: list[dim_with_size]) -> Tensor: ..
 @overload
 def expand_dims(self: Tensor, dims_and_sizes: tuple[dim_with_size, ...]) -> Tensor: ...
 
-
 def expand_dims(
-    self: Tensor, dims_and_sizes: None | dim_with_size | list[dim_with_size] | tuple[dim_with_size, ...] = None,
+    self: Tensor, dims_and_sizes: None | dim_with_size | Sequence[dim_with_size] = None,
     *other_dims: dim_with_size
     ) -> Tensor:
+    if (
+        other_dims
+    ):
+        if not dims_and_sizes:
+            raise ValueError("First element of expand_dims(self, None, (dim, size), ...) is None")
+        elif isinstance(dims_and_sizes, list):
+            raise ValueError("expand_dims(t, [(dim, size)], (dim, size)) supplied")
+        elif (
+            len(dims_and_sizes) != 2
+            or not isinstance(dims_and_sizes[0], int)
+            or not isinstance(dims_and_sizes[1], int)
+            or not isinstance(dims_and_sizes, tuple)
+        ):
+            raise ValueError("expand_dims(t, (dim, size, a) supplied or dim or size != int")
+        return _expand_dims(self, (dims_and_sizes,) + other_dims)
+
     if (
         dims_and_sizes is None
         or (isinstance(dims_and_sizes[0], list) and len(dims_and_sizes[0]) == 0)
         or (isinstance(dims_and_sizes[0], tuple) and len(dims_and_sizes[0]) == 0)
     ):
-        raise ValueError("You must specify at least one dimension, you specified zero.")
+        raise ValueError("expand_dims(t) called")
+
+    if not isinstance(dims_and_sizes, tuple):
+        return _expand_dims(self, tuple(dims_and_sizes))
+
     if (
-        isinstance(dims_and_sizes, list)
-        and len(other_dims) > 0
-    ):
-        raise ValueError("Invalid combination of vararg and dim_and_sizes list")
-    if (
-        other_dims
-        and isinstance(dims_and_sizes, tuple)
-        and len(dims_and_sizes) == 2
+        len(dims_and_sizes) == 2
         and isinstance(dims_and_sizes[0], int)
         and isinstance(dims_and_sizes[1], int)
     ):
-        dims_and_sizes = [(dims_and_sizes[0], dims_and_sizes[1])] + list(other_dims)
-    if isinstance(dims_and_sizes, tuple):
-        assert not isinstance(dims_and_sizes[0], int)
-        assert len(dims_and_sizes) == 1 or not isinstance(dims_and_sizes[1], int)
-        dims_and_sizes = list(dims_and_sizes)
-    if not isinstance(dims_and_sizes, list):
-        assert False, dims_and_sizes
+        return _expand_dims(self, (dims_and_sizes,))
+
+    elems: tuple[dim_with_size, ...] = tuple()
+    elem: dim_with_size
+    for elem in dims_and_sizes:
+        if (
+            not isinstance(elem, tuple)
+            or len(elem) != 2
+            or not isinstance(elem[0], int)
+            or not isinstance(elem[1], int)
+        ):
+            raise ValueError(elem)
+        elems = elems + (elem,)
+
+    return _expand_dims(self, elems)
+
+def _expand_dims(self: Tensor, dims_and_sizes: tuple[dim_with_size, ...]) -> Tensor:
     expands = [-1] * self.dim()
     for dim, size in dims_and_sizes:
         wrap_dim = maybe_wrap_dim(self, dim)
