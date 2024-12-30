@@ -9,19 +9,24 @@ import torch
 @lru_cache(255)
 def _operand_to_sizes(shape: tuple[int, ...], operand: str) -> tuple[int, ...]:
     inp, outp = operand.split("->")
+    inp_dims = inp.split(",")
+    outp_dims = outp.split(",")
 
-    if len(inp) != len(shape):
-        raise ValueError("")
-    if "".join(outp.split(",")) != inp:
+    if len(inp_dims) != len(shape):
+        raise ValueError("Got an invalid number of dimensions for tensor of shape ", shape, " with operand ", operand)
+
+    outp_inp_dims = [dim for dim in outp_dims if dim in inp_dims]
+    if outp_inp_dims != inp_dims:
         raise ValueError(
             f"The order of dimensions must be the same for input and output, "
-            f"got {inp} vs {''.join(outp.split(','))}"
+            f"got {inp_dims} vs {outp_dims} ({outp_inp_dims})"
         )
+
     sizes: tuple[int, ...] = tuple()
-    for i, elem in enumerate(outp):
+    for i, elem in enumerate(outp_dims):
         size = 1
-        if elem in inp:
-            size = shape[inp.index(elem)]
+        if elem in inp_dims:
+            size = shape[inp_dims.index(elem)]
 
         sizes = sizes + (size,)
     return sizes
@@ -35,7 +40,7 @@ def unsqueeze(self: Tensor, operand: str) -> Tensor:
 
     Format: [a-zA-Z]+->[,a-zA-Z]+
     """
-    orig_sizes = (self.size(dim) for dim in range(self.dim()))
+    orig_sizes = tuple(self.size(dim) for dim in range(self.dim()))
     sizes = _operand_to_sizes(orig_sizes, operand)
     return self.view(sizes)
 
