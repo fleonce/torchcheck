@@ -1,0 +1,18 @@
+[project]
+name = "torchcheck"
+description = "Helper functions for pytorch, expand and unsqueeze with strings, inclusive cumsum"
+version = "1.0.8"
+dependencies = []
+requires-python = ">= 3.10"
+authors = [
+    { name = "Moritz Hennen", email = "mail@fleonce.de" }
+]
+maintainers = [
+    { name = "Moritz Hennen", email = "mail@fleonce.de" }
+]
+
+[tool.setuptools.packages.find]
+include = ["torchcheck"]
+
+[tool.setuptools.package-data]
+"torchcheck" = ["py.typed"]
